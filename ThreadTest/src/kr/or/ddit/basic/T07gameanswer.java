@@ -51,7 +51,7 @@ public class T07gameanswer {
 	}
 
 	/**
-	 * 게임 타이머
+	 * 게임 타이머 (5초)
 	 */
 	class GameTimer extends Thread{
 		@Override
@@ -79,7 +79,7 @@ public class T07gameanswer {
 	class UserInput extends Thread {
 		@Override
 		public void run() {
-			
+			//사용자 입력 받을 변수
 			String inputData = "";
 			
 			do{
@@ -98,4 +98,4 @@ public class T07gameanswer {
 
 
 
-}
+

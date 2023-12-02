@@ -14,7 +14,7 @@ public class T08ThreadPriorityTest {
 				new ThreadTest1(),
 				new ThreadTest2()
 		};
-		//.setPriority우선순위설정
+		//.setPriority : 우선순위설정
 		//우선순위는 start()메서드를 호출하기 전에 설정해야한다.
 		for (int i = 0; i < ths.length; i++) {
 			if(i==5) {
@@ -24,8 +24,8 @@ public class T08ThreadPriorityTest {
 				
 			}
 		}
-		//.getPriority우선순위출력
-		//설정된 우선순위 출력
+		//.getPriority : 우선순위출력
+		//설정된 우선순위 알고싶을때 출력
 		for (Thread th : ths) {
 			System.out.println(th.getName()+"의 우선순위 : "
 					+ th.getPriority());
