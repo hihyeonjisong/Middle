@@ -37,7 +37,7 @@ public class T04ByteArrayIOTest {
 			baos.write(data);//출력
 		}
 		
-		outSrc = baos.toByteArray();
+		outSrc = baos.toByteArray();//바이트 배열을 생성
 		System.out.println("inSrc=>"+Arrays.toString(inSrc));
 		System.out.println("outSrc=>"+Arrays.toString(outSrc));
 	}

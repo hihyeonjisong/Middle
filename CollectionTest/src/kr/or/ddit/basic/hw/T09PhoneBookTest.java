@@ -1,18 +1,15 @@
-package kr.or.ddit.basic;
-import java.io.File;
+package kr.or.ddit.basic.hw;//저장기능
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import javax.crypto.interfaces.PBEKey;
 
 /*
 문제) 이름, 주소, 전화번호 속성을 갖는 Phone클래스를 만들고, 이 Phone클래스를 이용하여 
@@ -73,29 +70,36 @@ import java.util.Set;
   
 */
 public class T09PhoneBookTest {
-	static Scanner scan =new Scanner(System.in);;
-	private static Map<String, PhoneVO> phoneBookMap =  new HashMap<String, PhoneVO>();
-	public static File phonebook = new File("d:/D_Other/Homework/phonebook.bin");
-	
-	
-//	public T09PhoneBookTest() {  //이렇게 하면 파일이 안가ㅜ
-//		scan = new Scanner(System.in);
-//		
-//		//            HashMap은<키를 String(문자열)으로, PhoneVo객체를 값으로 가짐>
-//		phoneBookMap = new HashMap<String, PhoneVO>();
-//	}
+	private Scanner scan;
+	private Map<String, PhoneVO> phoneBookMap ;
 	
 	public static void main(String[] args) {
-		ObjectInputStream ois =null;
+		new T09PhoneBookTest().phoneBookStart();
+	}
+	
+	public T09PhoneBookTest() {
+		ObjectInputStream ois = null;
+		
+		
+		
 		
 		try {
-			ois = new ObjectInputStream(new FileInputStream(phonebook));
-			phoneBookMap = (Map<String, PhoneVO>) ois.readObject();
-		} catch (ClassNotFoundException |IOException e) {
+			ois = new ObjectInputStream(new FileInputStream("d:/D_Other/Homework/phoneBook.bin"));
 			
-			//e.printStackTrace();
-			System.out.println("전화번호 정보가 없습니다.");
-			new T09PhoneBookTest().phoneBookStart();
+			
+			try {
+				phoneBookMap = (Map<String, PhoneVO>) ois.readObject();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}finally {
 			try {
 				ois.close();
@@ -103,12 +107,17 @@ public class T09PhoneBookTest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		} new T09PhoneBookTest().phoneBookStart();
 		
 		
-		new T09PhoneBookTest().phoneBookStart();
+		
+		
+		
+		scan = new Scanner(System.in);
+		
+		//            HashMap은<키를 String(문자열)으로, PhoneVo객체를 값으로 가짐>
+		phoneBookMap = new HashMap<String, PhoneVO>();
 	}
-	
 	
 	// 메뉴를 출력하는 메서드
 	public void displayMenu(){
@@ -125,9 +134,9 @@ public class T09PhoneBookTest {
 	
 	// 프로그램을 시작하는 메서드
 	public void phoneBookStart(){
-//		System.out.println("===============================================");
-//		System.out.println("   전화번호 관리 프로그램(파일로 저장되지 않음)");
-//		System.out.println("===============================================");
+		System.out.println("===============================================");
+		System.out.println("   전화번호 관리 프로그램(파일로 저장되지 않음)");
+		System.out.println("===============================================");
 		
 		while(true){
 			
@@ -148,37 +157,12 @@ public class T09PhoneBookTest {
 					break;
 				case 0 :
 					System.out.println("프로그램을 종료합니다...");
-					savePhone();
 					return;
 				default :
 					System.out.println("잘못 입력했습니다. 다시입력하세요.");
 			} // switch문
 		} // while문
 	}
-	private void savePhone() {
-		ObjectOutputStream oos =null;
-		
-		try {
-			oos = new ObjectOutputStream(new FileOutputStream(phonebook));
-			oos.writeObject(phoneBookMap);
-			System.out.println("전화번호를 저장합니다.");
-			
-		}catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}catch (IOException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		}finally {
-			try {
-				oos.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
 	private void displayAll() {
 		System.out.println("==============================");
 		System.out.println("번호\t이름\t전화번호\t주 소");
@@ -305,7 +289,7 @@ public class T09PhoneBookTest {
 }
 
 
-class PhoneVO implements Serializable {
+class PhoneVO {
 	private String name;
 	private String tel;
 	private String addr;

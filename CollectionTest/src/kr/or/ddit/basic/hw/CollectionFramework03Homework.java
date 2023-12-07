@@ -1,15 +1,50 @@
 package kr.or.ddit.basic.hw;
-
+import java.io.File;
+/**
+ * 저장기능 넣은 호텔
+ */
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
 public class CollectionFramework03Homework {
-	Scanner sc = new Scanner(System.in);
-	Map<Integer, HotelVo> hotelBookMap = new HashMap<Integer, HotelVo>();
+	static Scanner sc = new Scanner(System.in);
+	//Map(key, value)에 담는다
+	//Map에 담긴보따리 전체를 File에 저장한다(file은 하나씩만 저장가능,또 저장하려면 덮어씌워짐)
+	public static Map<Integer, HotelVo> hotelBookMap = new HashMap<Integer, HotelVo>();
+	//												Homework폴더
+	public static File hotel = new File("\"d:/D_Other/Homework/hotel.bin\""); 
 
 	public static void main(String[] args) {
+		ObjectInputStream ois =null;
+		//객체를 읽어올 경로
+		try {														
+			ois = new ObjectInputStream(new FileInputStream(hotel));
+			//readObject 메서드를 사용하여 객체를 읽어와 room hotelBookMap에 저장
+			//                   맵을(캐스팅하기)
+			hotelBookMap = (Map<Integer, HotelVo>) ois.readObject();//내가만든HotelVo클래스 직렬화해줘야함
+		} catch (IOException| ClassNotFoundException e) {
+			//예외가 발생하면(읽어올 객체가 없으면)->호텔정보가 없습니다
+			System.out.println("호텔정보가 없습니다.");
+			new CollectionFramework03Homework().hotelBookStart();
+		//finally 블록에서는 파일 입출력이 끝난 후 ObjectInputStream을 닫는다.
+		}finally {
+			try {//예외가 발생하더라도 close 메서드가 호출되도록 try-catch 블록으로 묶여있다.
+				ois.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		new CollectionFramework03Homework().hotelBookStart();
 	}
 
@@ -26,6 +61,9 @@ public class CollectionFramework03Homework {
 			case 3:roomnow();
 				break;
 			case 4:finish();
+			//4업무종료 를 누르면 맵정보가 파일로 저장하는 매소드로..
+				saveHotel();
+				System.exit(0);
 				break;
 			default:
 				System.out.println("없는 번호입니다.");
@@ -33,6 +71,33 @@ public class CollectionFramework03Homework {
 			}
 		}
 
+	}
+	/**
+	 * 맵에 저장된 호텔 정보를 파일에 저장하기
+	 */
+	private void saveHotel() {
+		ObjectOutputStream oos =null;
+		try {
+			oos = new ObjectOutputStream(new FileOutputStream(hotel));
+			//writeObject 메서드를 사용
+			//room맵에 저장된 정보를 파일에 씁니다.
+			oos.writeObject(hotelBookMap);
+			System.out.println("투숙객 정보를 저장합니다.");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				oos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 	private void finish() {
@@ -43,6 +108,7 @@ public class CollectionFramework03Homework {
 	}
 
 	private void roomnow() {
+		
 		Set<Integer> keySet= hotelBookMap.keySet();
 		for (Integer key : keySet) {
 			HotelVo hvo = hotelBookMap.get(key);
@@ -103,7 +169,7 @@ public class CollectionFramework03Homework {
 
 }
 
-class HotelVo {
+class HotelVo implements Serializable{//직렬화
 	private int roomno;
 	private String name;
 
