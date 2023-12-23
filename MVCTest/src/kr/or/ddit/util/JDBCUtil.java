@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * bulidpath체크->커넥션객체생성->sql생성
+ * bulidpath체크-커넥션객체생성-sql생성
  * @author PC-11
  *
  */

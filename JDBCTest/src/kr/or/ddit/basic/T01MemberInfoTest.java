@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import kr.or.ddit.util.JDBCUtil3;
 
 /*
@@ -41,10 +44,16 @@ create table mymember(
 
 */
 public class T01MemberInfoTest {
+	private static final Logger SQL_LOGGER = LogManager.getLogger("log4jexam.sql.Query");
+	private static final Logger PARAM_LOGGER = LogManager.getLogger("log4jexam.sql.Parameter");
+	private static final Logger RESULT_LOGGER = LogManager.getLogger(T01MemberInfoTest.class);
+	
+	
+	
 	//인터페이스 객체 변수 선언
 	private Connection conn;
 	private Statement stmt;
-	private PreparedStatement pstmt;
+	private PreparedStatement pstmt;//쿼리를 실행할 준비-> ? 넣고 setString하기
 	private ResultSet rs;
 	
 	private Scanner scan ;//= new Scanner(System.in); 
@@ -110,7 +119,7 @@ public class T01MemberInfoTest {
 			
 			System.out.println("ID"+"\t"+"생성일"+"\t"+"이 름"+"\t"+"전화번호"+"\t"+"주소");
 	
-			
+			//rs값이 여러개: while문으로 꺼냄(1개이면 if문으로꺼내)
 			while(rs.next()) {
 				String memId = rs.getNString("mem_id");
 				String memName = rs.getNString("mem_name");
@@ -271,6 +280,7 @@ public class T01MemberInfoTest {
 			String sql =" insert into mymember" + 
 					" ( mem_id,mem_name,mem_tel,mem_addr ) " + 
 					" values(?,?,?,?) ";
+			SQL_LOGGER.info("SQL: "+sql);
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -279,7 +289,13 @@ public class T01MemberInfoTest {
 			pstmt.setString(3, memTel);
 			pstmt.setString(4, memAddr);
 			
+			PARAM_LOGGER.info(
+					"parameter : memId = {}, memName = {}, memId = {}, memName = {} ",
+					memId, memName, memTel, memAddr);
+			
 			int cnt = pstmt.executeUpdate();//
+			
+			RESULT_LOGGER.debug("결과값: {}", cnt);
 			
 			if(cnt>0) {
 				System.out.println(memId+"인 회원 정보 추가 성공!");

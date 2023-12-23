@@ -65,7 +65,7 @@ public class JDBCUtil3 {
 		
 		if(rs!=null)try {rs.close();}catch(SQLException ex) {}
 		if(stmt!=null)try {stmt.close();}catch(SQLException ex) {}
+		if(conn!=null)try {rs.close();}catch(SQLException ex) {}
 		if(pstmt!=null)try {pstmt.close();}catch(SQLException ex) {}
-		if(rs!=null)try {rs.close();}catch(SQLException ex) {}
 	}
 }
